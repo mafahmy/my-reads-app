@@ -1,20 +1,30 @@
 import React from "react";
-import Shelf from "./Shelf";
+import Shelf from "./Shelf"; // Importing shelf
 
-function Shelves({books, moveBook}) {
+// setting books, moveBook function as props
 
-    const currentlyReading = books.filter((book) => book.shelf === "currentlyReading");
-    const wantToRead = books.filter((book) => book.shelf === 'wantToRead');
-    const read = books.filter((book) => book.shelf === 'read');
+function Shelves({ books, moveBook }) {
+  // filtering the books to each shelf
+  const currentlyReading = books.filter(
+    (book) => book.shelf === "currentlyReading"
+  );
+  const wantToRead = books.filter((book) => book.shelf === "wantToRead");
+  const read = books.filter((book) => book.shelf === "read");
 
-    console.log('books',books)
+  console.log("books", books);
 
-    return( 
-        <div>
-            <Shelf title="Currently Reading" books={currentlyReading} moveBook={moveBook}/>
-            <Shelf title="Want to Read" books={wantToRead} moveBook={moveBook}/>
-            <Shelf title="Read" books={read} moveBook={moveBook}/>
-        </div>
-    )
+  // passing the props to Shelf,
+
+  return (
+    <div>
+      <Shelf
+        title="Currently Reading"
+        books={currentlyReading}
+        moveBook={moveBook}
+      />
+      <Shelf title="Want to Read" books={wantToRead} moveBook={moveBook} />
+      <Shelf title="Read" books={read} moveBook={moveBook} />
+    </div>
+  );
 }
 export default Shelves;

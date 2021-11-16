@@ -3,7 +3,7 @@ import { Link, Route } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import Shelves from "./Shelves";
-
+import { debounce } from "throttle-debounce";
 import SearchPage from "./SearchPage";
 
 function BooksApp() {
@@ -47,13 +47,17 @@ function BooksApp() {
   useEffect(
     () => {
       if (querry) {
-        BooksAPI.search(querry).then((data) => {
-          if (data.error) {
-            setSearchBooks([]);
-          } else {
-            setSearchBooks(data);
-          }
-        });
+        debounce(
+          700,
+          false,
+          BooksAPI.search(querry).then((data) => {
+            if (data.error) {
+              setSearchBooks([]);
+            } else {
+              setSearchBooks(data);
+            }
+          })
+        );
       } else setSearchBooks([]);
     },
     [querry]

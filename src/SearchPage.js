@@ -1,14 +1,21 @@
 import React from "react";
 import Book from "./Book";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function SearchPage({
-  moveBook,
-  searchBooks,
-  querry,
-  setQuerry,
-  useShowSearchPage,
-}) {
+function SearchPage(props) {
+  // moveBook,
+  // searchBooks,
+  // querry,
+  // setQuerry,
+
+  SearchPage.propTypes = {
+    moveBook: PropTypes.func.isRequired,
+    searchBooks: PropTypes.array.isRequired,
+    querry: PropTypes.string.isRequired,
+    setQuerry: PropTypes.func,
+  };
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -31,17 +38,17 @@ function SearchPage({
           <input
             type="text"
             placeholder="Search by title or author"
-            value={querry}
-            onChange={(e) => setQuerry(e.target.value)}
+            value={props.querry}
+            onChange={(e) => props.setQuerry(e.target.value)}
           />
         </div>
       </div>
       <div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {searchBooks.map((book) => (
+            {props.searchBooks.map((book) => (
               <li key={book.id}>
-                <Book book={book} moveBook={moveBook} />
+                <Book book={book} moveBook={props.moveBook} />
               </li>
             ))}
           </ol>
