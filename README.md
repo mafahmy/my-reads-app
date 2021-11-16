@@ -90,3 +90,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+
+
+## The project is done using functional componnent
+
+- I used hooks to set the states and to get the data from the API
+- The project is a single page APP
+- The project is about controlling Data around the UI
+- Moving books from one category to the other 
+- Searching for books on the Database with the ability to add them to any category
+- navigation is done useing React router
+
+
+
