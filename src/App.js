@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Route } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
@@ -38,26 +38,27 @@ function BooksApp() {
     if (shelf !== "none") {
       book.shelf = shelf;
       movedBook = movedBook.concat(book);
-    } else book.shelf = "none";
+    } else book.shelf = movedBook.shelf;
 
     useBooks(movedBook);
   };
+  const debouncedSearch = useRef(
+    debounce(700, false, (querry) =>
+      BooksAPI.search(querry).then((data) => {
+        if (data.error) {
+          setSearchBooks([]);
+        } else {
+          setSearchBooks(data);
+        }
+      })
+    )
+  );
   // A use effect hook to search for books in the API and manage the search functionality
 
   useEffect(
     () => {
       if (querry) {
-        debounce(
-          700,
-          false,
-          BooksAPI.search(querry).then((data) => {
-            if (data.error) {
-              setSearchBooks([]);
-            } else {
-              setSearchBooks(data);
-            }
-          })
-        );
+        debouncedSearch.current(querry);
       } else setSearchBooks([]);
     },
     [querry]
@@ -96,6 +97,7 @@ function BooksApp() {
               moveBook={moveBook}
               querry={querry}
               setQuerry={setQuerry}
+              books={books}
             />
           )}
         />

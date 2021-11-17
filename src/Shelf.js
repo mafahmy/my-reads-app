@@ -1,9 +1,16 @@
 import React from "react";
 import Book from "./Book";
+import PropTypes from "prop-types";
 
 // setting the props for using in Shelf
 
 function Shelf({ books, title, moveBook }) {
+
+  Shelf.propTypes = {
+    books: PropTypes.array.isRequired,
+    title:PropTypes.string.isRequired,
+    moveBook: PropTypes.func.isRequired,
+  }
   // passing the props to Book, and creating the ol of books
   return (
     <div className="bookshelf">

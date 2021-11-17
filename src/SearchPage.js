@@ -16,6 +16,19 @@ function SearchPage(props) {
     setQuerry: PropTypes.func,
   };
 
+  const searchedHomedBooks = props.searchBooks.map((book) => {
+    props.books.map((b) => {
+      if (b.id === book.id) {
+        book.shelf = b.shelf;
+      }
+
+      return b;
+    });
+
+    
+    return book;
+  });
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -46,9 +59,14 @@ function SearchPage(props) {
       <div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {props.searchBooks.map((book) => (
+            {searchedHomedBooks.map((book) => (
               <li key={book.id}>
-                <Book book={book} moveBook={props.moveBook} />
+                <Book
+                  book={book}
+                  shelf={book.shelf}
+                  moveBook={props.moveBook}
+                  searchedHomedBooks={searchedHomedBooks}
+                />
               </li>
             ))}
           </ol>
