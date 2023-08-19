@@ -3,10 +3,11 @@ import Shelf from "./Shelf"; // Importing shelf
 import PropTypes from "prop-types";
 // setting books, moveBook function as props
 
-function Shelves({ books, moveBook }) {
+function Shelves({ books, moveBook, error }) {
   Shelves.propTypes = {
     books: PropTypes.array.isRequired,
     moveBook: PropTypes.func.isRequired,
+    error: PropTypes.object
   };
 
   // filtering the books to each shelf
@@ -20,6 +21,11 @@ function Shelves({ books, moveBook }) {
 
   return (
     <div>
+      {error && (
+        <div className="error">
+          <h3>{error.message}</h3>
+        </div>
+      )}
       <Shelf
         title="Currently Reading"
         books={currentlyReading}

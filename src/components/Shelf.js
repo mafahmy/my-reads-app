@@ -8,7 +8,7 @@ function Shelf({ books, title, moveBook }) {
 
   Shelf.propTypes = {
     books: PropTypes.array.isRequired,
-    title:PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     moveBook: PropTypes.func.isRequired,
   }
   // passing the props to Book, and creating the ol of books

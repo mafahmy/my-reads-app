@@ -1,47 +1,64 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, Route } from "react-router-dom";
-import * as BooksAPI from "./BooksAPI";
+import * as BooksAPI from "./api/BooksAPI";
 import "./App.css";
-import Shelves from "./Shelves";
+import Shelves from "./components/Shelves";
 import { debounce } from "throttle-debounce";
-import SearchPage from "./SearchPage";
+import SearchPage from "./components/SearchPage";
 
+/**
+ * The main app component for the MyReads app.
+ *
+ * This component fetches data from the BooksAPI, manages the app state,
+ * and defines the routes for the app.
+ */
 function BooksApp() {
-  // state = {
-  /**
-   * TODO: Instead of using this state variable to keep track of which page
-   * we're on, use the URL in the browser's address bar. This will ensure that
-   * users can use the browser's back and forward buttons to navigate between
-   * pages, as well as provide a good URL they can bookmark and share.
-   */
-  //const [showSearchPage, useShowSearchPage] = useState(false);
-  // }
-
-  // using hooks to be able to set the states
-
-  const [books, useBooks] = useState([]);
-
+  // State variables for the books, search query, and search results
+  const [books, setBooks] = useState([]);
   const [querry, setQuerry] = useState("");
-
   const [searchBooks, setSearchBooks] = useState([]);
+  const [error, setError] = useState(null);
 
-  // using useEffect to be able to get data from API
+  // Fetch books data from the API when the component mounts
   useEffect(() => {
-    BooksAPI.getAll().then((books) => useBooks(books));
+    const fetchBooks = async () => {
+      const books = await BooksAPI.getAll();
+      setBooks(books);
+    }
+    fetchBooks();
   }, []);
+  // Update search results when the search query changes
+  useEffect(
+    () => {
+      if (querry) {
+        debouncedSearch.current(querry);
+      } else setSearchBooks([]);
+    },
+    [querry]
+  );
 
-  // A function to update and move books around
+  /**
+   * Move a book to a different shelf.
+   *
+   * @param {Object} book - The book to move.
+   * @param {string} shelf - The new shelf for the book.
+   */
   const moveBook = (book, shelf) => {
-    BooksAPI.update(book, shelf);
-    let movedBook = [];
-    movedBook = books.filter((b) => b.id !== book.id);
-    if (shelf !== "none") {
-      book.shelf = shelf;
-      movedBook = movedBook.concat(book);
-    } else book.shelf = movedBook.shelf;
-
-    useBooks(movedBook);
-  };
+    //Update the local state
+    const updatedBooks = books.map((eachBook) => {
+      if (eachBook.id === book.id) {
+        console.log({ ...eachBook, shelf })
+        return { ...eachBook, shelf };
+      } else {
+        return eachBook
+      }
+    });
+    setBooks(updatedBooks);
+    BooksAPI.update(book, shelf).catch((error) => {
+      setError({ message: 'Error while moving book to shelf', details: error });
+    });
+  }
+  // Create a debounced version of the search function
   const debouncedSearch = useRef(
     debounce(700, false, (querry) =>
       BooksAPI.search(querry).then((data) => {
@@ -53,56 +70,43 @@ function BooksApp() {
       })
     )
   );
-  // A use effect hook to search for books in the API and manage the search functionality
-
-  useEffect(
-    () => {
-      if (querry) {
-        debouncedSearch.current(querry);
-      } else setSearchBooks([]);
-    },
-    [querry]
-  );
-
-  //
-
   return (
-    <div>
-      <div className="app">
-        <Route // setting the routes for the app and passing the props to the Shelves
-          exact
-          path="/"
-          render={() => (
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
-              <div className="list-books-content">
-                <Shelves books={books} moveBook={moveBook} />
-              </div>
-              <div className="open-search">
-                <Link to="/search">
-                  <button>Add a book</button>
-                </Link>
-              </div>
+    <div className="app">
+      {/* Setting the routes for the app */}
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
             </div>
-          )}
-        />
-
-        <Route
-          path="/search"
-          render={() => (
-            <SearchPage
-              searchBooks={searchBooks}
-              moveBook={moveBook}
-              querry={querry}
-              setQuerry={setQuerry}
-              books={books}
-            />
-          )}
-        />
-      </div>
+            <div className="list-books-content">
+              <Shelves books={books} moveBook={moveBook} error={error} />
+            </div>
+            <div className="open-search">
+              <Link to="/search">
+                <button>Add a book</button>
+              </Link>
+            </div>
+          </div>
+        )}
+      />
+      <Route
+        path="/search"
+        render={() => (
+          <SearchPage
+            searchBooks={searchBooks}
+            moveBook={moveBook}
+            querry={querry}
+            setQuerry={setQuerry}
+            books={books}
+            error={error}
+          />
+        )}
+      />
     </div>
+
   );
 }
 
