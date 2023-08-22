@@ -9,15 +9,12 @@ function Shelves({ books, moveBook, error }) {
     moveBook: PropTypes.func.isRequired,
     error: PropTypes.object
   };
-
-  // filtering the books to each shelf
-  const currentlyReading = books.filter(
-    (book) => book.shelf === "currentlyReading"
-  );
-  const wantToRead = books.filter((book) => book.shelf === "wantToRead");
-  const read = books.filter((book) => book.shelf === "read");
-
-  // passing the props to Shelf,
+  // Define an array of shelf data
+  const shelves = [
+    { title: 'Want to read', id: 'wantToRead' },
+    { title: 'Read', id: 'read' },
+    { title: 'Currently Reading', id: 'currentlyReading' },
+  ]
 
   return (
     <div>
@@ -26,13 +23,11 @@ function Shelves({ books, moveBook, error }) {
           <h3>{error.message}</h3>
         </div>
       )}
-      <Shelf
-        title="Currently Reading"
-        books={currentlyReading}
-        moveBook={moveBook}
-      />
-      <Shelf title="Want to Read" books={wantToRead} moveBook={moveBook} />
-      <Shelf title="Read" books={read} moveBook={moveBook} />
+      {
+        shelves.map((shelf) => (
+          <Shelf key={shelf.id} title={shelf.title} books={books.filter((book) => book.shelf === shelf.id)} moveBook={moveBook} />
+        ))
+      }
     </div>
   );
 }

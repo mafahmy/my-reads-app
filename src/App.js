@@ -6,6 +6,7 @@ import Shelves from "./components/Shelves";
 import { debounce } from "throttle-debounce";
 import SearchPage from "./components/SearchPage";
 
+
 /**
  * The main app component for the MyReads app.
  *
@@ -45,6 +46,7 @@ function BooksApp() {
    */
   const moveBook = (book, shelf) => {
     //Update the local state
+    setError(null);
     const updatedBooks = books.map((eachBook) => {
       if (eachBook.id === book.id) {
         console.log({ ...eachBook, shelf })
