@@ -10,6 +10,7 @@ function SearchPage(props) {
     searchBooks: PropTypes.array.isRequired,
     querry: PropTypes.string.isRequired,
     setQuerry: PropTypes.func,
+    books: PropTypes.array,
     error: PropTypes.object,
   };
   const searchedHomedBooks = props.searchBooks.map((book) => {
@@ -21,7 +22,6 @@ function SearchPage(props) {
     });
     return book;
   });
-
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -56,6 +56,7 @@ function SearchPage(props) {
                   book={book}
                   shelf={book.shelf}
                   moveBook={props.moveBook}
+                  books={props.books}
                   searchedHomedBooks={searchedHomedBooks}
                 />
               </li>

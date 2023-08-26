@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function Book({ book, moveBook, }) {
+function Book({ books, book, moveBook, }) {
 
   Book.propTypes = {
     book: PropTypes.object.isRequired,

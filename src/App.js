@@ -47,14 +47,21 @@ function BooksApp() {
   const moveBook = (book, shelf) => {
     //Update the local state
     setError(null);
-    const updatedBooks = books.map((eachBook) => {
-      if (eachBook.id === book.id) {
-        console.log({ ...eachBook, shelf })
-        return { ...eachBook, shelf };
-      } else {
-        return eachBook
-      }
-    });
+    let updatedBooks = []
+    if (book.shelf) {
+      updatedBooks = books.reduce((acc, eachBook) => {
+        if (book.id === eachBook.id) {
+          book.shelf = shelf;
+          acc.push(book);
+        } else {
+          acc.push(eachBook);
+        }
+        return acc
+      }, [])
+    } else {
+      book.shelf = shelf
+      updatedBooks = [...books, book];
+    }
     setBooks(updatedBooks);
     BooksAPI.update(book, shelf).catch((error) => {
       setError({ message: 'Error while moving book to shelf', details: error });
